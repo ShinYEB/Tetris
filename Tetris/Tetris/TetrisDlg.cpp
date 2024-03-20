@@ -8,6 +8,9 @@
 #include "TetrisDlg.h"
 #include "afxdialogex.h"
 #include "algorithm"
+#include "iostream"
+#include "string"
+#include "cmath"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -53,6 +56,10 @@ END_MESSAGE_MAP()
 
 CTetrisDlg::CTetrisDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_TETRIS_DIALOG, pParent)
+	//, Level(_T(""))
+	//, Score(_T(""))
+	, s_score(_T("0"))
+	, s_level(_T("1"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -60,12 +67,19 @@ CTetrisDlg::CTetrisDlg(CWnd* pParent /*=nullptr*/)
 void CTetrisDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	//  DDX_Text(pDX, IDC_STATIC_LEVEL, Level);
+	//  DDX_Text(pDX, IDC_STATIC_SCORE, Score);
+	DDX_Control(pDX, IDC_STATIC_LEVEL, m_Level);
+	DDX_Control(pDX, IDC_STATIC_SCORE, m_Score);
+	DDX_Text(pDX, IDC_STATIC_SCORE, s_score);
+	DDX_Text(pDX, IDC_STATIC_LEVEL, s_level);
 }
 
 BEGIN_MESSAGE_MAP(CTetrisDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -189,7 +203,10 @@ void CTetrisDlg::OnPaint()
 	}
 
 	if (newBlock)
+	{
 		makeBlock();
+		End();
+	}
 
 	{ // Next Blocks
 		for (int i = 0; i < 3; i++)
@@ -276,8 +293,8 @@ void CTetrisDlg::OnPaint()
 		presentBlock.push_back(tempv);
 	}
 
-
-	SetTimer(1, 1000, NULL);
+	if(!isEnd)
+		SetTimer(1, 1100 / pow(1.1, _ttoi(s_level)), NULL);
 
 }
 
@@ -322,25 +339,13 @@ BOOL CTetrisDlg::PreTranslateMessage(MSG* pMsg)
 									   {blocky[2][1], blocky[1][1], blocky[0][1]},
 									   {blocky[2][2], blocky[1][2], blocky[0][2]} };
 
-			//int tempblock_i[3][3] = { {block[2][0], block[1][0], block[0][0]},
-			//						  {block[2][1], block[1][1], block[0][1]},
-			//						  {block[2][2], block[1][2], block[0][2]} };
-
-			//CRect templine[4][4] = {  {line[3][0], line[2][0], line[1][0], line[0][0]}, 
-			//						{line[3][1], line[2][1], line[1][1], line[0][1]},
-			//						{line[3][2], line[2][2], line[1][2], line[0][2]},
-			//						{line[3][3], line[2][3], line[1][3], line[0][3]} };
-
 			for (int i = 0; i < 3; i++)
 				for (int j = 0; j < 3; j++)
 				{
-					//block[i][j] = tempblock_i[i][j];
 					blockx[i][j] = tempblock_ix[i][j];
 					blocky[i][j] = tempblock_iy[i][j];
 				}
-			//for (int i = 0; i < 4; i++)
-			//	for (int j = 0; j < 4; j++)
-			//		line[i][j] = templine[i][j];
+
 
 		}
 		Invalidate();
@@ -350,27 +355,7 @@ BOOL CTetrisDlg::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-void CTetrisDlg::OnTimer(UINT_PTR nIDEvent)
-{
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 
-	CDialogEx::OnTimer(nIDEvent);
-
-	switch (nIDEvent)
-	{
-	case 1:
-		if (isMove('d'))
-		{
-			pointy++;
-		}
-		else
-		{
-			newBlock = true;
-		}
-		Invalidate();
-		break;
-	}
-}
 
 bool CTetrisDlg::isMove(char p)
 {
@@ -406,7 +391,7 @@ bool CTetrisDlg::isMove(char p)
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				if ((block[blocky[i][j]][blockx[i][j]] == 1 && board[i + pointy][j + pointx + 2] != 0) || (i + pointx > 8))
+				if ((block[blocky[i][j]][blockx[i][j]] == 1 && board[i + pointy][j + pointx + 2] != 0) || (j + pointx > 8 && block[blocky[i][j]][blockx[i][j]] == 1))
 					return false;
 			}
 		}
@@ -417,6 +402,7 @@ bool CTetrisDlg::isMove(char p)
 
 void CTetrisDlg::makeBlock()
 {
+
 	if (colorNext[0] == 0)
 	{
 		srand(time(NULL));
@@ -432,12 +418,13 @@ void CTetrisDlg::makeBlock()
 			if (block[i][j] == 1)
 				board[blocky[i][j] + pointy][blockx[i][j] + pointx + 1] = PresentColor;
 
+
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 3; j++)
 		{
 			block[i][j] = 0;
-			blockx[i][j] = j;
-			blocky[i][j] = i;
+			blockx[i][j] = i;
+			blocky[i][j] = j;
 		}
 
 	pointx = 3;
@@ -458,6 +445,96 @@ void CTetrisDlg::makeBlock()
 		for (int j = 0; j < 3; j++)
 			block[i][j] = category[PresentCategory][i][j];
 
+	isMakeLine();
+	LevelUp();
 	newBlock = false;
+}
+
+
+
+void CTetrisDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	CDialogEx::OnTimer(nIDEvent);
+
+	switch (nIDEvent)
+	{
+	case 1:
+		if (isMove('d'))
+			pointy++;
+		
+		else
+			newBlock = true;
+		
+		Invalidate();
+		break;
+	}
+}
+
+void CTetrisDlg::isMakeLine()
+{
+	bool check;
+	vector<int> isNotLine;
+	vector<vector<int>> tempboard;
+
+	
+
+	for (int i = 0; i < 20; i++)
+	{
+		check = true;
+		for (int j = 1; j < 11; j++)
+			if (board[i][j] == 0)
+				check = false;
+		if (!check)
+			isNotLine.push_back(i);
+	}
+
+	string s = to_string(_ttoi(s_score) + (20 - isNotLine.size()) * 10);
+	s_score = s.c_str();
+	UpdateData(false);
+
+	if (isNotLine.size() != 20)
+	{
+		for (int i = 0; i < 20 - isNotLine.size(); i++)
+			tempboard.push_back(vector<int>(12, 0));
+		
+
+		for (int i = 0; i < isNotLine.size(); i++)
+			tempboard.push_back(board[isNotLine[i]]);
+
+		tempboard.push_back(vector<int>(12, 0));
+
+
+		for(int i=0; i<20; i++)
+			for (int j = 1; j < 11; j++)
+			{
+				board[i][j] = tempboard[i][j];
+			}
+	}
+}
+
+void CTetrisDlg::LevelUp()
+{
+	if (_ttoi(s_score) > _ttoi(s_level) * 100)
+	{
+		string s = to_string(_ttoi(s_level) + 1);
+		s_level = s.c_str();
+		UpdateData(false);
+	}
+}
+
+bool CTetrisDlg::End()
+{
+	bool temp = false;
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
+			if (board[i][j + 3] != 0)
+				temp = true;
+		
+	if (temp)
+		isEnd = true;
+
+	return temp;
 }
 

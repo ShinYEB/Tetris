@@ -48,6 +48,7 @@ private:
 							   {1, 1, 0},
 							   {0, 0, 0}} };
 
+	bool isEnd = false;
 	bool newBlock = true;
 	bool setBlock = false;
 	int pointx = 0, pointy = 0;
@@ -82,8 +83,19 @@ protected:
 
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
+
 	bool isMove(char p);
 	void makeBlock();
 
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	void isMakeLine();
+	void LevelUp();
+	bool End();
+
+//	CString Level;
+//	CString Score;
+	CStatic m_Level;
+	CStatic m_Score;
+	CString s_score;
+	CString s_level;
 };

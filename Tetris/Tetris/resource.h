@@ -10,7 +10,8 @@
 #define IDC_STATIC_L                    1000
 #define IDC_STATIC_LEVEL                1001
 #define IDC_STATIC_L2                   1002
-#define IDC_STATIC_LEVEL2               1003
+#define IDC_STATIC_S                    1002
+#define IDC_STATIC_SCORE                1003
 #define IDC_STATIC_LEVEL3               1004
 
 // Next default values for new objects
