@@ -6,5 +6,5 @@
 <br/> 
 <br/> 
 
-![4124213](https://github.com/ShinYEB/Tetris/assets/91859242/d4bc45a2-c9e8-4ca0-bc1e-cca82e366c31)
-![Tetris2024-03-2102-21-23-ezgif com-video-to-gif-converter](https://github.com/ShinYEB/Tetris/assets/91859242/b06c53d8-c981-419b-a731-bd9aeb14865b)
+![f1](https://github.com/ShinYEB/Tetris/assets/91859242/36fa054c-b29b-4142-9402-4e7855bb70dd)
+![f2](https://github.com/ShinYEB/Tetris/assets/91859242/b5582c24-5a00-4f94-9e1e-0b02db6d64f4)
