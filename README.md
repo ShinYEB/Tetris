@@ -1,7 +1,8 @@
 # Tetris
 
 <br/> 
-### C++ MFC Tetris
+# C++ MFC Tetris
+<br/> 
 <br/> 
 <br/> 
 
