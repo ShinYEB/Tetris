@@ -1,10 +1,12 @@
 # Tetris
 
 <br/> 
-# C++ MFC Tetris
-<br/> 
-<br/> 
-<br/> 
 
-![f1](https://github.com/ShinYEB/Tetris/assets/91859242/36fa054c-b29b-4142-9402-4e7855bb70dd)
-![f2](https://github.com/ShinYEB/Tetris/assets/91859242/b5582c24-5a00-4f94-9e1e-0b02db6d64f4)
+## C++ MFC Tetris
+
+<br/> <br/> <br/> 
+
+![f22](https://github.com/ShinYEB/Tetris/assets/91859242/da214f07-f783-4459-8482-45cfbc50be60)
+
+![Tetris2024-03-2102-21-23-ezgif com-video-to-gif-converter (1)](https://github.com/ShinYEB/Tetris/assets/91859242/806619d8-47e2-418b-83a3-a1bd1a93f5da)
+
